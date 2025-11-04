@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block title_head %}
+    Application - {{block.super}}
+{% endblock title_head %}
+{% block content %}
+    <H3>Heyyyy</H3>
+
+    {% include 'snippets/welcome-user-msg.html' %}
+    PageCOunt : {{page_visit_count}}
+    {{queryset}}
+
+
+{% endblock content %}
