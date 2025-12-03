@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 #import os
 from decouple import config
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #my apps
+    'commando',
     "visits",
 ]
 
@@ -103,9 +105,10 @@ CONN_MAX_AGE = config("CONN_MAX_AGE", cast=int, default=30)
 DATABASE_URL = config("DATABASE_URL" ,cast=str)
 
 if DATABASE_URL is not None:
-    import dj_database_url
+   
     DATABASES = {
-    'default': dj_database_url.config(default=DATABASE_URL
+    'default': dj_database_url.config(
+        default=DATABASE_URL
         ,conn_max_age=CONN_MAX_AGE,
         conn_health_checks=True,
         )
@@ -145,6 +148,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_BASE_DIR = BASE_DIR/"staticfiles"
+STATICFILES_BASE_DIR.mkdir(exist_ok=True, parents=True)
+STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR/"vendors"
+
+#source(s) for python manage.py collectstatic
+STATICFILES_DIRS = [
+    STATICFILES_BASE_DIR
+]
+
+#output(s) for python manage.py collectstatic
+#local cdn 
+STATIC_ROOT = BASE_DIR.parent / "local-cdn"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
