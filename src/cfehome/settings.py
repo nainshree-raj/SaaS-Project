@@ -32,6 +32,13 @@ EMAIL_USE_SSL = config(
 ADMIN_USER_NAME = config("ADMIN_USER_NAME", default="Admin user")
 ADMIN_USER_EMAIL = config("ADMIN_USER_EMAIL", default=None)
 
+MANAGERS = []
+ADMINS = []
+if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
+    # 500 errors are emailed to these users
+    ADMINS += [(f"{ADMIN_USER_NAME}", f"{ADMIN_USER_EMAIL}")]
+    MANAGERS = ADMINS
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -74,6 +81,13 @@ INSTALLED_APPS = [
     #my apps
     'commando',
     "visits",
+    #third party apps
+    'allauth',
+    'allauth_ui',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +98,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -147,7 +162,31 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#django Allauth config
 
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # new standard
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_LOGIN_METHOD="email"
+ACCOUNT_SIGNUP_FIELDS=['email']
+AUTHENTICATION_BACKENDS = [
+   # ...
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+   # ...
+]
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+SOCIALACCOUNT_PROVIDERS = {
+    "github":{
+        "VERIFIED_EMAIL":True
+    }
+}
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
