@@ -81,6 +81,8 @@ INSTALLED_APPS = [
     #my apps
     'commando',
     'profiles',
+    'customers',
+    'subscriptions',
     "visits",
     #third party apps
     'allauth',

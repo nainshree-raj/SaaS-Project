@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from auth import views as auth_views
+from subscriptions import views as subscriptions_views
 from .views import (
     home_view, 
     about_view, 
@@ -28,6 +29,8 @@ urlpatterns = [
     path('', home_view, name='home'),
     # path('login/',auth_views.login_view),
     # path('register/',auth_views.register_view),
+    path("pricing/", subscriptions_views.subscription_price_view, name='pricing'),
+    path("pricing/<str:interval>/", subscriptions_views.subscription_price_view, name='pricing_interval'),
     path('hello-world/', home_view),
     path('admin/', admin.site.urls),
     path('accounts/',include('allauth.urls')),
